@@ -34,9 +34,66 @@
         <hr>
 
         <section id="main_content">
+          
           <h1>Hello, inPulse!</h1>
           
           <p><img src="images/inpulse_watches.jpg" alt="A pair of inPulse watches, one displaying the time, the other displaying the body of an email." /></p>
+        
+          <p><strong>inPulse Magic 8-Ball</strong> is a sample program that introduces you to the basics of writing apps for the <a href="http://getinpulse.com">inPulse smartwatch</a>. In this exercise, we'll set up a virtual machine that contains the development tools you'll need and an inPulse simulator where you'll run your code, then we'll develop a <a href="http://en.wikipedia.org/wiki/Magic_8-Ball">"Magic 8-Ball"</a> app (sounds a little more fun than "Hello, World", doesn't it?) using C and some of the functions in the inPulse API. If you're a beginning inPulse developer, this tutorial is for you!</p>
+          
+          <h2>What You'll Need</h2>
+        
+          <p>In order to go through this tutorial and build the inPulse Magic 8 Ball app, you'll need the following:</p>
+          
+          <p><strong>A computer that can run Oracle VM VirtualBox 4.1.x.</strong> You'll develop the app and run it in the simulator, all from within a virtual Linux environment, and you'll need Oracle VM VirtualBox to run that virtual Linux environment. If you go to the <a href="http://www.oracle.com/technetwork/server-storage/virtualbox/downloads/index.html">Oracle VM VirtualBox downloads page</a>, you'll see all the operating systems it runs on: Windows 32- and 64-bit, Mac OS X, Solaris 10 and a fair number of Linux distributions (Debian, Fedora, Mandriva, openSUSE, Red Hat Enterprise Linux, SUSE and Ubuntu). Ideally, your computer should have at least 8GB of RAM.</p>
+          
+          <p><strong>Some programming experience and a little familiarity with the C programming language.</strong> If you've never programmed in C before, don't let the fact that the inPulse is programmed in C scare you off: C programming can be pretty straightforward, and you'll find that many of the concepts from your preferred programming language will apply. If you're familiar with a programming langauge with a similar syntax -- such as C#, Java, JavaScript, Perl or PHP -- you'll find many of the C constructs familiar. If you'd like to learn some C programming, there are many online resources, such as Zed Shaw's <a href="http://c.learncodethehardway.org/book/"><em>Learn C the Hard Way</em></a>.</p>
+          
+          <p><strong>That's it!</strong> You won't even need an inPulse smartwatch since this exercise will all be done in the simulator.</p>
+          
+          <h2>Setting Up the Development Environment</h2>
+          <p>In order to develop apps for the inPulse smartwatch simulator, you'll need to do two things:</p>
+          <ul>
+            <li><strong>Download and install VirtualBox,</strong> which you'll use to run the virtual machine image.</li>
+            <li><strong>Download and uncompress the virtual machine image,</strong> a virtual installation of a complete Linux system that's already been set up with everything you need to start developing inPulse apps. This virtual Linux system will run in its own window as if it were another program running on your computer.</li>
+          </ul>
+        
+          <h3>Download and Install VirtualBox</h3>
+          <p>Go to the <a href="http://www.oracle.com/technetwork/server-storage/virtualbox/downloads/index.html">Oracle VM VirtualBox download page</a> , look under the section marked <strong>Oracle VM VirtualBox</strong> for the link for the installer for your computer's operating system and click on it. 
+          
+          <h4>If You're Running Mac OS</h4>
+          <p><strong>If your operating system is Mac OS,</strong> the installer will come in a disk image (.dmg) file. Double-click the installer icon to open the disk image, which will create a virtual disk drive named <strong>VirtualBox</strong> on your desktop. The virtual disk drive should open automatically; if it doesn't, double-click it to see its contents. You should see something like this:</p>
+          <p><img src="images/virtualbox_mac_installer_window.jpg"></p>
+          <p><img src="images/virtualbox_icon.jpg" style="float: right; margin: 0 0 10px 20px;" />Double-click on the icon marked <strong>VirtualBox.mpkg</strong> to install Oracle VM VirtualBox. Once it's installed, open your <strong>Applications</strong> folder and double-click the VirtualBox icon to launch it.</p>
+          
+          <h4>If You're Running Windows</h4>
+          <p><strong>If your operating system is Windows,</strong> the installer will come as an executable (.exe) file. Double-click on its icon to start the installer, then launch VirtualBox from the <strong>Start</strong> menu.</p>
+          
+          <h4>If You're Running Linux</h4>
+          <p><strong>If your operating system is Linux,</strong> chances are you know what to do with the package format for your particular distribution and how to launch VirtualBox once it's installed. (I'll post a set of instructions for Ubuntu soon.)</p>
+        
+          <h3>Download and Uncompress the Virtual Machine Image</h3>
+          <p><a href="https://s3.amazonaws.com/inpulse_simulator/simulator/inPulseSimulator.rar"><strong>Download the virtual machine image, inPulseSimulator.rar</strong>,</a> then uncompress it. You might need to download a utility to uncompress .rar files, such as <a href="http://itunes.apple.com/app/the-unarchiver/id425424353?mt=12&ls=1">The Unarchiver</a> for Mac OS or <a href="http://www.win-rar.com/">WinRAR</a> or <a href="http://www.7-zip.org/">7-Zip</a> for Windows.</p>
+          <p><img src="images/vm_icon.jpg" style="float: right; margin: 0 0 10px 20px;" />The uncompressed file will have the filename <strong>inPulseSimulator.vdi</strong>. Put it in whatever directory you use to store your development work.</p>
+          
+          <h3>Set Up the Virtual Machine</h3>
+          <p><strong>If you haven't done so already, launch VirtualBox.</strong> You should see a window that looks like this:</p>
+          <p><img src="images/virtualbox_01.jpg"></p>
+          <p>Click <strong>New</strong>. This will start the <strong>New Virtual Machine Wizard</strong>, which walks you through the steps of setting up a virtual machine:</p>
+          <p><img src="images/virtualbox_02.jpg"></p>
+          <p>Click <strong>Continue</strong>, which takes you to the next step, where you specify what sort of operating system will run in the virtual machine:</p>
+          <p><img src="images/virtualbox_03.jpg"></p>
+          <p>Do the following:</p>
+          <ul>
+            <li>Give your virtual machine a name -- I chose <strong>inPulseDev</strong>, but you can name it however you like -- and enter it into the <strong>Name</strong> field.</li>
+            <li>For the <strong>Operating System</strong>, select <strong>Linux</strong>.</li>
+            <li>For the <strong>Version</strong>, select <strong>Linux 2.6</strong>.</li>
+            <li>Click <strong>Continue</strong>.</li>
+          </ul>
+          <p>You'll be taken to the next step, where you specify the minimum amount of RAM to be allocated to the virtual machine.</p>
+          <p><img src="images/virtualbox_04.jpg"></p>
+          <p></p>
+        
         </section>
 
         <footer>
