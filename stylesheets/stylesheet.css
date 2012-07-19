@@ -241,10 +241,14 @@ form {
 /* GENERAL ELEMENT TYPE STYLES */
 
 h1 {
+  font-family: 'Chivo', 'Helvetica Neue', Helvetica, Arial, serif;
+  font-weight: bold;
   font-size: 32px;
+  margin-bottom: 8px;
 } 
 
 h2 {
+  font-family: 'Chivo', 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 22px;
   font-weight: bold;
   color: #303030;
@@ -252,24 +256,29 @@ h2 {
 } 
 
 h3 {
-  color: #d5000d;
+  font-family: 'Chivo', 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 18px;
   font-weight: bold;
+  color: #d5000d;
   margin-bottom: 8px;
 } 
  
 h4 {
+  font-family: 'Chivo', 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 16px;
-  color: #303030;
   font-weight: bold;
+  color: #303030;
 } 
 
 h5 {
+  font-family: 'Chivo', 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: 1em;
+  font-weight: bold;
   color: #303030;
 } 
 
 h6 {
+  font-family: 'Chivo', 'Helvetica Neue', Helvetica, Arial, serif;
   font-size: .8em;
   color: #303030;
 } 
