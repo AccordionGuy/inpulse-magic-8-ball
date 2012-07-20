@@ -133,7 +133,88 @@
           <p>You can choose any of these options; pick the one you prefer and click <strong>OK</strong> to shut down the virtual machine. I prefer the <strong>Save the machine state</strong> option, which "freezes the virtual machine in time". When I start it again, restores the virtual machine to the exact same state as when I "froze it in time", running programs and all.</p>
           
           <h2>Exploring the Development Environment</h2>
+          <p><img src="images/explore_01.jpg" /></p>
+          <p>You'll find four icons on the desktop of the development environment:</p>
+          <p><img src="images/pulse_simulator_icon.jpg" style="float: left; margin: 0 20px 10px 0;"/><strong>pulse_simulator:</strong> A link to the directory containing the files you'll be using to develop apps, as well as some example code. The actual directory is located at <strong>/home/pulsesim/pulse_simulator</strong>. When you start developing inPulse apps, you work in this directory.</p>
+          <p><img src="images/getting_started_icon.jpg" style="float: left; margin: 0 20px 10px 0;"/><strong>Getting Started:</strong> A link to inPulse's <a href="http://www.getinpulse.com/simulator/"><em>Getting Started with the inPulse Simulator</em></a> web page. That topic is also covered in this tutorial.</p>
+          <p><img src="images/username_password_icon.jpg" style="float: left; margin: 0 20px 10px 0;"/><strong>username+password.txt:</strong> A text file containing the username and password of the <strong>pulsesim</strong> user, which you might need from time to time. The username and password are the same: <strong>pulsesim</strong>.</p>
+          <p><img src="images/terminal_icon.jpg" style="float: left; margin: 0 20px 10px 0;"/><strong>Terminal:</strong> A link to the command-line <strong>Terminal</strong> program, which you'll use to compile and run your apps.</p>
+          <p>Let's take a closer look at the contents of <strong>pulse_simulator</strong>:</p>
+          <p><img src="images/explore_02.jpg" /></p>
+          <p>Of these contents, the ones that of the most important to you in the short term are:</p>
+          <ul>
+            <li><strong>Makefile:</strong> Configures the <strong>make</strong> command, which you'll use to compile inPulse apps.</li>
+            <li><strong>src:</strong> The directory for source files. The code you write goes here.</li>
+            <li><strong>include:</strong> The directory for the header files that define inPulse's built-in functions and supported data types, which you'll need to <code>include</code> in your source code.</li>
+            <li><strong>build:</strong> The directory where your app, once compiled, goes.</li>
+            <li><strong>examples:</strong> A directory full of example code that you can use to learn more about inPulse programming.</li>
+          </ul>
           
+          <h2>Making Sure You Have the Latest Simulator</h2>
+          <p>Before we do anything else, we need to make sure that the simulator is up to date. We'll do this by running the <strong>update_simulator</strong> script.</p>
+          <p>Open the <strong>Terminal</strong> program. You can do this many ways; one way is to double-click on the <strong>Terminal</strong> icon on the desktop.</p>
+          <p>Once <strong>Terminal</strong> is open, get a directory listing by entering the <code>ls</code> command. You should see the following:
+<pre><code>pulsesim@ubuntu-desktop:~$ <span class="userinput">ls</span>
+Desktop    examples.desktop  Public           update_simulator
+Documents  Music             pulse_simulator  Videos
+Downloads  Pictures          Templates</code></pre>
+          <p>(<strong>Note:</strong> Any time we show you an example from a <strong>Terminal</strong> session, any commands you enter will be show in <code><span class="userinput">green</span></code>.)
+          <p>Enter <code>./update_simulator</code> at the prompt. This will run a script that will download the latest versions of the simulator files into the <strong>pulse_simulator</strong> directory (your computer will have to be online). You should see the following:</p>
+<pre><code>pulsesim@ubuntu-desktop:~$ <span class="userinput">./update_simulator</span> 
+Downloading latest Pulse Simulator
+--2012-07-20 15:47:23--  http://www.getinpulse.com/images/pulsesim/pulse_simulator.zip
+Resolving www.getinpulse.com... 107.21.230.67
+Connecting to www.getinpulse.com|107.21.230.67|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 817048 (798K) [application/zip]
+Saving to: `pulse_simulator.zip'
+
+100%[======================================>] 817,048      744K/s   in 1.1s    
+
+2012-07-20 15:47:24 (744 KB/s) - `pulse_simulator.zip' saved [817048/817048]
+
+Archive:  pulse_simulator.zip
+replace pulse_simulator/Makefile? [y]es, [n]o, [A]ll, [N]one, [r]ename:</code></pre>
+          <p>The script will pause at a prompt where it asks <code>replace pulse_simulator/Makefile? [y]es, [n]o, [A]ll, [N]one, [r]ename:</code>. Enter <code>A</code> for all, since we want all the files to be updated. You'll see a large list of messages announcing files being decompressed and put into their proper directories. When the messages stop and you are returned to the command prompt, the update is complete.</p>
+
+          <h2>Compiling and Running the Sample App</h2>
+          <p>Now that we've got the development environment set up, let's see the simulator in action! inPulse have set things up so that there's already a program ready to be compiled and run in the simulator.</p>
+          <p>Change to the <strong>pulse_simulator</strong> directory by entering <code>cd pulse_simulator</code> at the command line. Then enter <code>make</code> to compile the code:</p>
+<pre><code>pulsesim@ubuntu-desktop:~$ <span class="userinput">cd pulse_simulator/</span>
+pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">make</span>
+gcc -o build/pulse_app  -Iinclude -std=gnu99 -g -Wall lib/obj/main.o -Llib -D PULSE_SIMULATOR -lapp_common -lpulse_os -lpulse_protocol -lpulse_widgets -lgtk-x11-2.0 src/pulse_app.c
+src/pulse_app.c: In function ‘main_app_handle_button_down’:
+src/pulse_app.c:43: warning: implicit declaration of function ‘pulse_printf’
+pulsesim@ubuntu-desktop:~/pulse_simulator$</code></pre>
+          <p><strong>make</strong> uses the <strong>Makefile</strong> in this directory as instructions for compiling the source code, which is in the file <strong>pulse_app.c</strong>, which in turn is stored in the <strong>src</strong> directory. The resulting compiled file, <strong>pulse_app</strong>, is put into the <strong>build</strong> directory.</p>
+          <p>(Don't worry about the warning issued by the compiler about the <code>implicit declaration of function ‘pulse_printf’</code>; it's the result of a little hack that makes development for the simulator a little easier.)</p>
+          <p>We have a compiled app -- let's run it! Enter <code>build/pulse_app</code> at the prompt, and you should see this window appear:</p>
+          <p><img src="images/simulator_01.jpg" /></p>
+          <p>This app is called the <strong>Falling Box Demo</strong>. It draws a box that constantly falls from the top of the screen. When the box reaches the bottom of the screen, it's brought back to the top. Make a note of the size of the black area where the box is drawn: that's the area of the inPulse display, which is:</p>
+          <ul>
+            <li>96 pixels wide</li>
+            <li>128 pixels high</li>
+          </ul>
+          <p>The inPulse has a single button on its right side. In the simulator, it's represented by the big button labelled <strong>Button</strong> on the right side of the window.</p> 
+          <p>Click <strong>Button</strong>. You'll see something like this:</p>
+          <p><img src="images/simulator_02.jpg" /></p>
+          <p>The <strong>Button Down</strong> text appeared when you pressed down on the button, and the <strong>Button Up</strong> text appeared when you released it. This suggests that there's an event for each action, which you can use in your own apps.</p>
+          <p>Look at <strong>Terminal</strong>. You'll see that it's displaying the following:</p>
+<pre><code>Button Down
+Button Up
+</code></pre>
+          <p>The function that prints text to the watch screen also prints to the terminal, which is handy for debugging.</p>
+          <p>The simulator also has a menu bar, with two menus labelled <strong>Notifications</strong> and <strong>Hardware</strong>. For now, we're more interested in the menu bar itself, because it's used to simulate the inPulse vibrate function:</p>
+          <ul>
+            <li><strong>When vibrate is off,</strong> the menu bar is brown.</li>
+            <li><strong>When vibrate is on,</strong> the menu bar is blue.</li>
+          </ul>
+          <p>Once you're done trying out the sample app, stop it. You can do this by either:</p>
+          <ul>
+            <li>Clicking on the simulator's "close window" button</li>
+            <li>Typing <strong>control-C</strong> in <strong>Terminal</strong></li>
+          </ul>
+            
           <h2>Your First inPulse App: "Hello, World!"</h2>
           
         </section>

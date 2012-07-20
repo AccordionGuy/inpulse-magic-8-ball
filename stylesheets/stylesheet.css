@@ -192,6 +192,10 @@ pre code {
   padding: 0;
 }
 
+.userinput {
+  color: #00cc33;
+}
+
 ul, ol, dl {
   margin-bottom: 20px;
 }
