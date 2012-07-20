@@ -215,7 +215,118 @@ Button Up
           </ul>
             
           <h2>Your First inPulse App: "Hello, World!"</h2>
+          <h3>The Skeleton</h3>
+          <p>For all the exercises in this tutorial, we're going to be working on the <strong>pulse_app.c</strong> file, which is located in the <strong>src</strong> directory of <strong>pulse_simulator</strong>.</p>
+          <p>Open <strong>pulse_app.c</strong> with the editor of your choice. If you prefer to use a GUI-based editor, navigate to <strong>pulse_app.c</strong> and double-click it. This will open the file in gEdit, Ubuntu's default GUI editor.</p>
+          <p><strong>pulse_app.c</strong> currently contains the code for the demo app we just ran. This code also exists in the <strong>examples/api_examples</strong> directory, in the file titled <strong>falling_box_using_main_loop.c</strong>, so we can overwrite it without worry. Since the <strong>Makefile</strong> is already set up to compile <strong>pulse_app.c</strong>, it's easiest just to use this file.</p>
+          <p>Select all the code in <strong>pulse_app.c</strong> and delete it. Copy the following code, paste it into <strong>pulse_app.c</strong> and save it:</p>
+<pre><code>//
+// Hello, World!
+// =============
+//
+// A simple tutorial app that demonstrates displaying the time
+// and other text on the inPulse smartwatch screen,
+// as well as responding to button events.
+//
+// Since this is a tutorial app, it's a little more heavily
+// commented than your typical code.
+
+
+// Includes
+// ========
+
+// A standard C header that defines a number of integer types.
+// We'll often need this for the uint32_t, which defines a 32-bit
+// unsigned integer type (useful for counting from 0 to 4.2 billion).
+#include <stdint.h>
+
+// Headers we'll need to program inPulse apps.
+// - pulse_os.h gives us access to the inPulse API functions,
+//   from telling the time to drawing on the screen to controlling
+//   vibration and so on.
+// - pulse_types.h provides data types that we use when using
+//   the inPulse API.
+#include <pulse_os.h>
+#include <pulse_types.h>
+
+
+// inPulse Event Handlers
+// ======================
+// These routines are called in response to inPulse watch events,
+// such as the watch booting up, the user pressing and releasing
+// the button and so on.
+
+// main_app_init is called once: after the watch has booted up and its
+// OS has been loaded. Use this to initialize your app.
+void main_app_init()
+{
+
+}
+
+// main_app_handle_button_down is called every time the user presses down
+// on the watch button.
+void main_app_handle_button_down()
+{
+
+}
+
+// main_app_handle_button_up is called every time the user releases the
+// watch button after having pressed it.
+void main_app_handle_button_up()
+{
+
+}
+
+// main_app_loop is a function that gets called regularly and frequently.
+// Use this for operations that your app will perform on a regular basis.
+// No blocking calls are allowed in this function; any call that blocks
+// for over 5 seconds will cause the inPulse watchdog timer to start and
+// reset the watch.
+void main_app_loop()
+{
+
+}
+
+// main_app_handle_doz is called whenever the processor is about to go into
+// sleep mode to conserve power. Use this to do any "housekeeping" before the
+// watch goes to sleep.
+// The sleep functionality is scheduled with pulse_update_power_down_timer.
+void main_app_handle_doz()
+{
+
+}
+
+// main_app_handle_hardware_update is called whenever certain hardware events
+// take place, such as Bluetooth connection/disconnetion and changes in the
+// "battery charging" status.
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}</code></pre>
+          <p>This is the <em>skeleton</em> -- a little framework that we'll flesh out throughout this exercise. Read the comments in the code, as they explain a lot.</p>
+          <p>Switch to <strong>Terminal</strong>, compile the app with <strong>make</strong> and then run it. Your terminal window should look like this:</p>
+<pre><code>pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">make</span>
+gcc -o build/pulse_app  -Iinclude -std=gnu99 -g -Wall lib/obj/main.o -Llib -D PULSE_SIMULATOR -lapp_common -lpulse_os -lpulse_protocol -lpulse_widgets -lgtk-x11-2.0 src/pulse_app.c
+pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">./build/pulse_app</span> 
+No resources read from ../resources/inpulse_resources.bin
+</code></pre>
+          <p>The simulator should be running and look like this:</p>
+          <p><img src="images/simulator_03.jpg" /></p>
+          <p>It runs, but since it's just a skeleton without any functioning code within, it's not doing anything you can see. Stop the app (either by closing the simulator window or typing <strong>control-C</strong> in the terminal).</p>
           
+          <h3>Displaying "Hello World" on the Screen</h3>
+          <p>Just as with command-line desktop apps written in C, the <code>printf</code> function for inPulse sends text to "standard output", which in our case is the watch display. To display the message <strong>Hello, world!</strong>, the following line of code needs to be executed:</p>
+<pre><code>printf("Hello, world!");</code></pre>
+          <p>That's the easy part. The question is now "Where do we put that line of code?" In a desktop C program, you'd put it in the <code>main</code> function, but our inPulse app skeleton (and inPulse apps in general) doesn't have one.</p>
+          <p>The functions in our skeleton where we <em>could</em> place our <code>printf</code> statement are:</p>
+          <ul>
+            <li><code>main_app_init</code></li>
+            <li><code>main_app_handle_button_down</code></li>
+            <li><code>main_app_handle_button_up</code></li>
+            <li><code>main_app_loop</code></li>
+            <li><code>main_app_handle_doz</code></li>
+            <li><code>main_app_handle_hardware_update</code></li>
+          </ul>
         </section>
 
         <footer>
