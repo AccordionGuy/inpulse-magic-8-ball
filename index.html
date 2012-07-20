@@ -55,7 +55,7 @@
           <p>In order to develop apps for the inPulse smartwatch simulator, you'll need to do two things:</p>
           <ul>
             <li><strong>Download and install VirtualBox,</strong> which you'll use to run the virtual machine image.</li>
-            <li><strong>Download and uncompress the virtual machine image,</strong> a virtual installation of a complete Linux system that's already been set up with everything you need to start developing inPulse apps. This virtual Linux system will run in its own window as if it were another program running on your computer.</li>
+            <li><strong>Download and uncompress the virtual disk image,</strong> a virtual hard disk containing a complete Linux system that's already been set up with everything you need to start developing inPulse apps. This system will run in its own window as if it were another program running on your computer.</li>
           </ul>
         
           <h3>Download and Install VirtualBox</h3>
@@ -72,8 +72,8 @@
           <h4>If You're Running Linux</h4>
           <p><strong>If your operating system is Linux,</strong> chances are you know what to do with the package format for your particular distribution and how to launch VirtualBox once it's installed. (I'll post a set of instructions for Ubuntu soon.)</p>
         
-          <h3>Download and Uncompress the Virtual Machine Image</h3>
-          <p><a href="https://s3.amazonaws.com/inpulse_simulator/simulator/inPulseSimulator.rar"><strong>Download the virtual machine image, inPulseSimulator.rar</strong>,</a> then uncompress it. You might need to download a utility to uncompress .rar files, such as <a href="http://itunes.apple.com/app/the-unarchiver/id425424353?mt=12&ls=1">The Unarchiver</a> for Mac OS or <a href="http://www.win-rar.com/">WinRAR</a> or <a href="http://www.7-zip.org/">7-Zip</a> for Windows.</p>
+          <h3>Download and Uncompress the Virtual Disk Image</h3>
+          <p><a href="https://s3.amazonaws.com/inpulse_simulator/simulator/inPulseSimulator.rar"><strong>Download the compressed virtual disk image, inPulseSimulator.rar</strong>,</a> then uncompress it. You might need to download a utility to uncompress .rar files, such as <a href="http://itunes.apple.com/app/the-unarchiver/id425424353?mt=12&ls=1">The Unarchiver</a> for Mac OS or <a href="http://www.win-rar.com/">WinRAR</a> or <a href="http://www.7-zip.org/">7-Zip</a> for Windows.</p>
           <p><img src="images/vm_icon.jpg" style="float: right; margin: 0 0 10px 20px;" />The uncompressed file will have the filename <strong>inPulseSimulator.vdi</strong>. Put it in whatever directory you use to store your development work.</p>
           
           <h3>Set Up the Virtual Machine</h3>
@@ -92,8 +92,50 @@
           </ul>
           <p>You'll be taken to the next step, where you specify the minimum amount of RAM to be allocated to the virtual machine.</p>
           <p><img src="images/virtualbox_04.jpg"></p>
-          <p></p>
-        
+          <p>On my computer, an 8GB MacBook Pro, I gave the virtual machine 4096MB (4GB) of RAM. This setting seems to work well for both the Mac OS host and Linux running in the virtual machine. You can experiment and see if you get acceptable performance from the virtual machine with less RAM.</p>
+          <p>Once you've set the amount of RAM to be allocated to the virtual machine, click <strong>Continue</strong>. You'll be taken to the next step, where you set up a virtual hard disk.</p>
+          <p><img src="images/virtualbox_05.jpg"></p>
+          <p>We want the virtual machine to boot from this virtual disk, so make sure that <strong>Start-up Disk</strong> is checked. The virtual disk image you downloaded earlier is the one we want to use, so:</p>
+          <ul>
+            <li>Select <strong>Use existing hard disk</strong></li>
+            <li>Click on the folder icon, use it to navigate to wherever you stored <strong>inPulseSimulator.vdi</strong> and select it.</li>
+            <li>Click <strong>Continue</strong>.
+          </ul>
+          <p>You'll be taken to the summary page, where you can review the settings you chose:</p>
+          <p><img src="images/virtualbox_06.jpg"></p>
+          <p>The summary should list the following:</p>
+          <ul>
+            <li><strong>Name:</strong> <em>Whatever name you gave the virtual machine</em></li>
+            <li><strong>OS Type:</strong> Linux 2.6</li>
+            <li><strong>Base Memory:</strong> <em>Whatever you allocated -- mine says</em> 4096MB</li>
+            <li><strong>Start-up Disk:</strong> inPulseSimulator.vdi (Normal, 10.00GB)</li>
+          </ul>
+          <p>Click the <strong>Create</strong> button. Your virtual machine will be created, and you'll be returned to the window you saw when you launched VirtualBox, with one notable difference:</p>
+          <p><img src="images/virtualbox_07.jpg"></p>
+          <p>In the left pane of the window, you'll see the virtual machine you just created.</p>
+          
+          <h3>Start the Virtual Machine</h3>
+          <p>It's time to start the virtual machine to confirm that it works. Click on the virtual machine to make sure it's selected, then click <strong>Start</strong>. The virtual machine will start booting up, just like a hardware machine would, only more quickly. Dismiss any dialog boxes that may appear during the startup process.</p>
+          <p>At some point, you should see the Ubuntu logo:</p>
+          <p><img src="images/virtualbox_08.jpg"></p>
+          <p>...and once the system has booted, you should see something like this:</p>
+          <p><img src="images/virtualbox_09.jpg"></p>
+          <p>The virtual disk image contains an older, out-of-date version of Ubuntu that isn't supported anymore. Don't let this bother you; this version is perfectly fine for running the development tools and the inPulse simulator.</p>
+          <p>Dismiss the dialog box that says "Your Ubuntu release is not supported anymore" and close the Update Manager. You should now have a clear view of the desktop, which has four icons. One of the icons may be on top of another; rearrange the icons so that none of them overlap.</p>
+          <p>The desktop should now look something like this:
+          <p><img src="images/virtualbox_10.jpg"></p>
+          <p><strong>Congratulations!</strong> You've set up the virtual machine and are now ready to start writing inPulse apps.</p>
+          <p>Before we start developing apps, let me show you how to shut down the virtual machine.</p>
+          
+          <h3>Shut Down the Virtual Machine</h3>
+          <p>Eventually, you'll want to shut down the virtual machine and work on something else (or get away from the computer entirely). You can do this by simply closing the virtual machine's window. The contents of the window will fade to grey and you'll be prompted with a dialog box:</p>
+          <p><img src="images/virtualbox_11.jpg"></p>
+          <p>You can choose any of these options; pick the one you prefer and click <strong>OK</strong> to shut down the virtual machine. I prefer the <strong>Save the machine state</strong> option, which "freezes the virtual machine in time". When I start it again, restores the virtual machine to the exact same state as when I "froze it in time", running programs and all.</p>
+          
+          <h2>Exploring the Development Environment</h2>
+          
+          <h2>Your First inPulse App: "Hello, World!"</h2>
+          
         </section>
 
         <footer>
