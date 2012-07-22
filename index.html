@@ -238,7 +238,7 @@ Button Up
 // A standard C header that defines a number of integer types.
 // We'll often need this for the uint32_t, which defines a 32-bit
 // unsigned integer type (useful for counting from 0 to 4.2 billion).
-#include <stdint.h>
+td#include &lt;stdint.h&gt;
 
 // Headers we'll need to program inPulse apps.
 // - pulse_os.h gives us access to the inPulse API functions,
@@ -246,8 +246,8 @@ Button Up
 //   vibration and so on.
 // - pulse_types.h provides data types that we use when using
 //   the inPulse API.
-#include <pulse_os.h>
-#include <pulse_types.h>
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
 
 
 // inPulse Event Handlers
@@ -320,13 +320,108 @@ No resources read from ../resources/inpulse_resources.bin
           <p>That's the easy part. The question is now "Where do we put that line of code?" In a desktop C program, you'd put it in the <code>main</code> function, but our inPulse app skeleton (and inPulse apps in general) doesn't have one.</p>
           <p>The functions in our skeleton where we <em>could</em> place our <code>printf</code> statement are:</p>
           <ul>
-            <li><code>main_app_init</code></li>
-            <li><code>main_app_handle_button_down</code></li>
-            <li><code>main_app_handle_button_up</code></li>
-            <li><code>main_app_loop</code></li>
-            <li><code>main_app_handle_doz</code></li>
-            <li><code>main_app_handle_hardware_update</code></li>
+            <li><code>main_app_init</code>: Called only once, when the watch boots up and the OS has been loaded.</li>
+            <li><code>main_app_handle_button_down</code>: Called whenever the user presses <em>down</em> on the watch button.</li>
+            <li><code>main_app_handle_button_up</code>: Called whenever the user, after having pressed down on the watch button, releases it.</li>
+            <li><code>main_app_loop</code>: Called regularly as the watch continues to operate.</li>
+            <li><code>main_app_handle_doz</code>: Called at the time right before the watch is about to go into power-conserving sleep mode.</li>
+            <li><code>main_app_handle_hardware_update</code>: Called whenever certain hardware events, such as Bluetooth connection/disconnection or changes in battery charging status take place. </li>
           </ul>
+          <p>Let's try putting it in <code>main_app_init</code> to see what happens. Your code skeleton should look like this now:
+<pre><code>//
+// Hello, World!
+// =============
+//
+// A simple tutorial app that demonstrates displaying the time
+// and other text on the inPulse smartwatch screen,
+// as well as responding to button events.
+//
+// Since this is a tutorial app, it's a little more heavily
+// commented than your typical code.
+
+
+// Includes
+// ========
+
+// A standard C header that defines a number of integer types.
+// We'll often need this for the uint32_t, which defines a 32-bit
+// unsigned integer type (useful for counting from 0 to 4.2 billion).
+td#include &lt;stdint.h&gt;
+
+// Headers we'll need to program inPulse apps.
+// - pulse_os.h gives us access to the inPulse API functions,
+//   from telling the time to drawing on the screen to controlling
+//   vibration and so on.
+// - pulse_types.h provides data types that we use when using
+//   the inPulse API.
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
+
+
+// inPulse Event Handlers
+// ======================
+// These routines are called in response to inPulse watch events,
+// such as the watch booting up, the user pressing and releasing
+// the button and so on.
+
+// main_app_init is called once: after the watch has booted up and its
+// OS has been loaded. Use this to initialize your app.
+void main_app_init()
+{
+    printf("Hello, world!");
+}
+
+// main_app_handle_button_down is called every time the user presses down
+// on the watch button.
+void main_app_handle_button_down()
+{
+
+}
+
+// main_app_handle_button_up is called every time the user releases the
+// watch button after having pressed it.
+void main_app_handle_button_up()
+{
+
+}
+
+// main_app_loop is a function that gets called regularly and frequently.
+// Use this for operations that your app will perform on a regular basis.
+// No blocking calls are allowed in this function; any call that blocks
+// for over 5 seconds will cause the inPulse watchdog timer to start and
+// reset the watch.
+void main_app_loop()
+{
+
+}
+
+// main_app_handle_doz is called whenever the processor is about to go into
+// sleep mode to conserve power. Use this to do any "housekeeping" before the
+// watch goes to sleep.
+// The sleep functionality is scheduled with pulse_update_power_down_timer.
+void main_app_handle_doz()
+{
+
+}
+
+// main_app_handle_hardware_update is called whenever certain hardware events
+// take place, such as Bluetooth connection/disconnetion and changes in the
+// "battery charging" status.
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}</code></pre>
+          <p>(Yes, that's a lot of code to show for a one-line change, but I thought it might be reassuring to see the whole thing, at least for your first attempt at inPulse code.)</p>
+          <p>Switch to <strong>Terminal</strong>, compile the app with <code>make</code> and then run it. Your terminal window should look like this:</p>
+<pre><code>pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">make</span>
+gcc -o build/pulse_app  -Iinclude -std=gnu99 -g -Wall lib/obj/main.o -Llib -D PULSE_SIMULATOR -lapp_common -lpulse_os -lpulse_protocol -lpulse_widgets -lgtk-x11-2.0 src/pulse_app.c
+src/pulse_app.c: In function ‘main_app_init’:
+src/pulse_app.c:41: warning: implicit declaration of function ‘pulse_printf’
+pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">./build/pulse_app</span>
+No resources read from ../resources/inpulse_resources.bin
+</code></pre>
+          <p>The simulator should be running and look like this:</p>
+          <p><img src="images/simulator_04.jpg"></p>
         </section>
 
         <footer>
