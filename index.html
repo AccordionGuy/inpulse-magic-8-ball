@@ -869,11 +869,11 @@ The time is
 #include &lt;pulse_os.h&gt;
 #include &lt;pulse_types.h&gt;
 
-#define INTERVAL_LENGTH_MS
-#include <pulse_os.h>
-#include <pulse_types.h> 5000
+
+#define INTERVAL_LENGTH_MS 5000
 uint32_t start_interval_ms;
 uint32_t now_ms;
+
 
 // inPulse Event Handlers
 // ======================
@@ -1005,7 +1005,7 @@ Actual interval:4994
           <ul>
             <li>It should normally display the current time, showing the hour, minutes and seconds.</li>
             <li>When the user presses the button down, the display should read <strong>Think of a yes-or-no question.</strong></li>
-            <li>When the user releases the button, the display should show a "Magic 8-Ball" answer for 6 seconds, then return to its normal display of the current time.
+            <li>When the user releases the button, the display should show a "Magic 8-Ball" answer for 5 seconds, then return to its normal display of the current time.
           </ul>
           <p>Here's the code for this app:</p>
 <pre><code>//
@@ -1020,21 +1020,23 @@ Actual interval:4994
 #include &lt;pulse_types.h&gt;
 
 
-#define  NUM_MAGIC_8BALL_QUOTES 15
+enum DisplayMode_t { TIME_MODE, ANSWER_MODE } display_mode;
+
+// Magic 8-ball answers
+#define  NUM_8BALL_ANSWERS 15
 typedef  char* string;
-string   magic_8ball_quotes[NUM_MAGIC_8BALL_QUOTES];
+string   magic_8ball_quotes[NUM_8BALL_ANSWERS];
 
-struct pulse_time_tm current_time;
-
-bool is_displaying_time = false;
-#define UPDATE_INTERVAL_LENGTH_MS 900
-#define QUOTE_INTERVAL_LENGTH_MS 6000
-uint32_t start_interval_ms;
-uint32_t current_interval_length_ms;
+// Timing
+#define  TIME_UPDATE_INTERVAL_LENGTH_MS 900
+#define  ANSWER_INTERVAL_LENGTH_MS 5000 
+struct   pulse_time_tm current_time;
+uint32_t interval_start_time_ms;
+uint32_t interval_length_ms;
 uint32_t now_ms;
 
 
-void initialize_magic_8ball_quotes()
+void initialize_8ball_answers()
 {
     magic_8ball_quotes[0]  = "I'd bet money on it";
     magic_8ball_quotes[1]  = "HELLZ YEAH!";
@@ -1055,20 +1057,24 @@ void initialize_magic_8ball_quotes()
 
 string random_magic_8ball_quote()
 {
-    return magic_8ball_quotes[rand() % NUM_MAGIC_8BALL_QUOTES];
+    return magic_8ball_quotes[rand() % NUM_8BALL_ANSWERS];
+}
+
+void set_time_mode()
+{
+    display_mode = TIME_MODE;
+    interval_length_ms = TIME_UPDATE_INTERVAL_LENGTH_MS;
+    interval_start_time_ms = pulse_get_millis();
 }
 
 void update_time_display()
 {
     pulse_blank_canvas();
-    pulse_get_time_date(&amp;current_time);
+    pulse_get_time_date(&current_time);
     printf("The time is\n%d:%0.2d:%0.2d\n", 
            current_time.tm_hour,
            current_time.tm_min,
            current_time.tm_sec);
-    is_displaying_time = true;
-    current_interval_length_ms = UPDATE_INTERVAL_LENGTH_MS;
-    start_interval_ms = pulse_get_millis();
 }
 
 void display_prequote_message()
@@ -1077,13 +1083,17 @@ void display_prequote_message()
     printf("Think of a yes-\nor-no question.\n");
 }
 
-void display_magic_8ball_quote()
+void set_answer_mode()
+{
+    display_mode = ANSWER_MODE;
+    interval_length_ms = ANSWER_INTERVAL_LENGTH_MS;
+    interval_start_time_ms = pulse_get_millis();
+}
+
+void display_answer()
 {
     pulse_blank_canvas();
-    printf("%s\n", random_magic_8ball_quote());
-    is_displaying_time = false;
-    current_interval_length_ms = QUOTE_INTERVAL_LENGTH_MS;
-    start_interval_ms = pulse_get_millis();
+    printf("The 8-ball says:\n\"%s\"\n", random_magic_8ball_quote());
 }
 
 
@@ -1092,7 +1102,8 @@ void display_magic_8ball_quote()
 
 void main_app_init()
 {
-    initialize_magic_8ball_quotes();
+    initialize_8ball_answers();
+    set_time_mode();
     update_time_display();
 }
 
@@ -1103,13 +1114,17 @@ void main_app_handle_button_down()
 
 void main_app_handle_button_up()
 {
-    display_magic_8ball_quote();
+    set_answer_mode();
+    display_answer();
 }
 
 void main_app_loop()
 {
     now_ms = pulse_get_millis();
-    if (now_ms - start_interval_ms > current_interval_length_ms) {
+    if (now_ms - interval_start_time_ms > interval_length_ms) {
+        if (display_mode == ANSWER_MODE) {
+            set_time_mode();
+        }
         update_time_display();
     }
 }
@@ -1123,6 +1138,12 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
 {
 
 }</code></pre>
+          <p>Most of the time, the app is in "time mode", where it looks like this:</p>
+          <p><img src="images/simulator_12.jpg"></p>
+          <p>In time mode, the app displays the current time. The time interval when we check to see if it's time to update the display is set to 900 milliseconds, just below a full second. In <code>main_app_loop</code>, we check to see if we've been waiting longer than that interval. If that's the case, it means that nearly a second has passed and it's time to update the time display, which we do in <code>update_time_display</code>.</p>
+          <p>When the user presses and releases the button, the app is put in "answer mode" (with <code>set_answer_mode</code>), which looks like this:</p>
+          <p><img src="images/simulator_13.jpg"></p>
+          <p>In answer mode, the app displays a random "Magic 8-ball" answer for 5 seconds (<code>display_answer</code>), after which it returns to time mode. The time interval when we check to see if it's time to switch back to time mode is set to 5000 milliseconds, which is 5 seconds. In <code>main_app_loop</code>, we check to see if we've been waiting longer than that interval. If that's the case, it means that 5 seconds have passed and it's time to change to time mode (<code>set_time_mode</code>) and then display the time (<code>update_time_display</code>).</p>
           
         </section>
 
