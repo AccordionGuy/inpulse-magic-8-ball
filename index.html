@@ -216,11 +216,15 @@ Button Up
           </ul>
             
           <h2>Your First inPulse App: "Hello, World!"</h2>
+          <h3>Getting the Code</h3>
+          <p>We're going to start coding from here on in. You can type in the code yourself or copy and paste it, and if you want to download it, it's all available on <a href="https://github.com/AccordionGuy/inpulse-magic-8-ball">this GitHub source page</a>.</p>
+          
           <h3>The Skeleton</h3>
           <p>For all the exercises in this tutorial, we're going to be working on the <strong>pulse_app.c</strong> file, which is located in the <strong>src</strong> directory of <strong>pulse_simulator</strong>.</p>
           <p>Open <strong>pulse_app.c</strong> with the editor of your choice. If you prefer to use a GUI-based editor, navigate to <strong>pulse_app.c</strong> and double-click it. This will open the file in gEdit, Ubuntu's default GUI editor.</p>
           <p><strong>pulse_app.c</strong> currently contains the code for the demo app we just ran. This code also exists in the <strong>examples/api_examples</strong> directory, in the file titled <strong>falling_box_using_main_loop.c</strong>, so we can overwrite it without worry. Since the <strong>Makefile</strong> is already set up to compile <strong>pulse_app.c</strong>, it's easiest just to use this file.</p>
           <p>Select all the code in <strong>pulse_app.c</strong> and delete it. Copy the following code, paste it into <strong>pulse_app.c</strong> and save it:</p>
+          <p><strong><em>hello_world_1.c</em></strong></p>
 <pre><code>//
 // Hello, World!
 // =============
@@ -328,7 +332,8 @@ No resources read from ../resources/inpulse_resources.bin
             <li><code>main_app_handle_doz</code>: Called at the time right before the watch is about to go into power-conserving sleep mode.</li>
             <li><code>main_app_handle_hardware_update</code>: Called whenever certain hardware events, such as Bluetooth connection/disconnection or changes in battery charging status take place. </li>
           </ul>
-          <p><code>main_app_init</code> is called once, when the app starts up, so it sounds like a good candidate to place that line of code. Your code skeleton should look like this now:
+          <p><code>main_app_init</code> is called once, when the app starts up, so it sounds like a good candidate to place that line of code. Your code skeleton should look like this now:</p>
+          <p><strong><em>hello_world_2.c</em></strong></p>
 <pre><code>//
 // Hello, World!
 // =============
@@ -428,6 +433,7 @@ Hello, world!
             <li>When the user releases the button, the watch should display the text <strong>...button goes up!</strong></li>
           </ul>
           <p>To do this, we'll add a couple of <code>printf</code> statements: one to <code>main_app_handle_button_down</code> and one to <code>main_app_handle_button_up</code>. Here's how the code should look:</p>
+          <p><strong><em>hello_world_3.c</em></strong></p>
 <pre><code>//
 // Hello, World!
 // =============
@@ -595,6 +601,7 @@ printf("The time is\n%d:%0.2d:%0.2d\n",
             <li>Display the current time when the button is released</li>
           </ul>
           <p>Here's what the code looks like:</p>
+          <p><strong><em>hello_world_4.c</em></strong></p>
 <pre><code>//
 // Hello, World!
 // =============
@@ -700,6 +707,7 @@ Hello, world!
           
           <h3>A Leaner Skeleton</h3>
           <p>Let's start with some leaner skeleton code -- it's the same as the skeleton code from above, but without all the comments:</p>
+          <p><strong><em>lean_inpulse_skeleton.c</em></strong></p>
 <pre><code>//
 // Lean inPulse Skeleton
 // =====================
@@ -749,6 +757,7 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
           <h3>The <code>main_app_loop</code> Handler</h3>
           <p>The <code>main_app_loop</code> handler is called regularly and often. If you're familiar with event-driven programming, think of it as being similar to a method called every time you go through the event loop. If you're familiar with game programming, think of it as being like a method called every time you go through the game loop.</p>
           <p>Here's a little code that shows <code>main_app_loop</code> in action:</p>
+          <p><strong><em>main_app_loop_demo.c</em></strong></p>
 <pre><code>//
 // Main App Loop Demo
 // ==================
@@ -862,6 +871,7 @@ The time is
             <li>Display <strong>Starting app!</strong> on startup, along with the main timer's value at that time.</li>
             <li>Every 5 seconds from then on, it clears the display, announces that 5 seconds have passed and shows both the main timer's value at that time as well as the interval (in milliseconds) between this announcement and the previous one.</li>
           </ul>
+          <p><strong><em>main_timer_experiment.c</em></strong></p>
 <pre><code>//
 // Main Timer Experiment
 // =====================
@@ -1012,6 +1022,7 @@ Actual interval:4994
             <li>When the user releases the button, the display should show a "Magic 8-Ball" answer for 5 seconds, then return to its normal display of the current time.
           </ul>
           <p>Here's the code for this app:</p>
+          <p><strong><em>inpulse_magic_8_ball.c</em></strong></p>
 <pre><code>//
 // InPulse Magic 8-Ball
 // ====================
