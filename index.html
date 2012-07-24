@@ -341,7 +341,7 @@ No resources read from ../resources/inpulse_resources.bin
 // commented than your typical code.
 
 
-td#include &lt;stdint.h&gt;
+include &lt;stdint.h&gt;
 
 // Headers we'll need to program inPulse apps.
 // - pulse_os.h gives us access to the inPulse API functions,
@@ -607,7 +607,7 @@ printf("The time is\n%d:%0.2d:%0.2d\n",
 // commented than your typical code.
 
 
-#include <stdint.h>
+#include &lt;stdint.h&gt;
 
 // Headers we'll need to program inPulse apps.
 // - pulse_os.h gives us access to the inPulse API functions,
@@ -615,8 +615,8 @@ printf("The time is\n%d:%0.2d:%0.2d\n",
 //   vibration and so on.
 // - pulse_types.h provides data types that we use when using
 //   the inPulse API.
-#include <pulse_os.h>
-#include <pulse_types.h>
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
 
 
 struct pulse_time_tm current_time;
@@ -647,7 +647,7 @@ void main_app_handle_button_down()
 // watch button after having pressed it.
 void main_app_handle_button_up()
 {
-    pulse_get_time_date(&current_time);
+    pulse_get_time_date(amp;urrent_time);
     printf("The time is\n%d:%0.2d:%0.2d\n", 
            current_time.tm_hour,
            current_time.tm_min,
@@ -701,9 +701,10 @@ Hello, world!
           <h3>A Leaner Skeleton</h3>
           <p>Let's start with some leaner skeleton code -- it's the same as the skeleton code from above, but without all the comments:</p>
 <pre><code>//
-// InPulse Magic 8-Ball
-// ====================
+// Lean inPulse Skeleton
+// =====================
 //
+// A skeleton for inPulse smartwatch apps.
 
 #include &lt;stdint.h&gt;
 
@@ -749,9 +750,11 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
           <p>The <code>main_app_loop</code> handler is called regularly and often. If you're familiar with event-driven programming, think of it as being similar to a method called every time you go through the event loop. If you're familiar with game programming, think of it as being like a method called every time you go through the game loop.</p>
           <p>Here's a little code that shows <code>main_app_loop</code> in action:</p>
 <pre><code>//
-// InPulse Magic 8-Ball
-// ====================
+// Main App Loop Demo
+// ==================
 //
+// An app that demonstrates the inPulse API's
+// main_app_loop event handler.
 
 #include &lt;stdint.h&gt;
 
@@ -860,9 +863,12 @@ The time is
             <li>Every 5 seconds from then on, it clears the display, announces that 5 seconds have passed and shows both the main timer's value at that time as well as the interval (in milliseconds) between this announcement and the previous one.</li>
           </ul>
 <pre><code>//
-// InPulse Magic 8-Ball
-// ====================
+// Main Timer Experiment
+// =====================
 //
+// An app written to show the use of the inPulse API's
+// pulse_get_millis and main_app_loop functions
+// in tandem.
 
 #include &lt;stdint.h&gt;
 
@@ -898,9 +904,7 @@ void main_app_handle_button_up()
 void main_app_loop()
 {
     now_ms = pulse_get_millis();
-    if (now_ms - start_interval_ms > INTERVAL_LENGTH_MS
-#include <pulse_os.h>
-#include <pulse_types.h>) {
+    if (now_ms - start_interval_ms > INTERVAL_LENGTH_MS) {
         pulse_blank_canvas();
         printf("5 seconds have\npassed!\n");
         printf("Timer: %d\n", now_ms);
@@ -1012,6 +1016,12 @@ Actual interval:4994
 // InPulse Magic 8-Ball
 // ====================
 //
+// A "Magic 8-ball" app for the inPulse smartwatch.
+// Normally, it displays the time in h:mm:ss format.
+// When the user presses the button, it displays
+// a "Magic 8-ball"-style answer for five seconds,
+// and then returns to its normal mode of showing
+// the time.
 
 #include &lt;stdint.h&gt;
 #include &lt;stdlib.h&gt;
