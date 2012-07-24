@@ -21,7 +21,7 @@
       <div class="inner">
 
         <header>
-          <h1>Inpulse-magic-8-ball</h1>
+          <h1>The inPulse Magic 8-Ball</h1>
           <h2>A Beginner's Tutorial for Programming inPulse Smartwatch Apps</h2>
         </header>
 
@@ -47,7 +47,8 @@
           <h2>What You'll Need</h2>
           <p>In order to go through this tutorial and build the inPulse Magic 8 Ball app, you'll need the following:</p>
           <p><img src="images/virtualbox_large_icon.jpg" style="float: right; margin: 0 0 10px 20px;" /><strong>A computer that can run Oracle VM VirtualBox 4.1.x.</strong> You'll develop the app and run it in the simulator, all from within a virtual Linux environment, and you'll need Oracle VM VirtualBox to run that virtual Linux environment. If you go to the <a href="http://www.oracle.com/technetwork/server-storage/virtualbox/downloads/index.html">Oracle VM VirtualBox downloads page</a>, you'll see all the operating systems it runs on: Windows 32- and 64-bit, Mac OS X, Solaris 10 and a fair number of Linux distributions (Debian, Fedora, Mandriva, openSUSE, Red Hat Enterprise Linux, SUSE and Ubuntu). Ideally, your computer should have at least 8GB of RAM.</p>
-          <p><img src="images/the_c_programming_language.jpg" style="float: right; margin: 0 0 10px 20px;" /><strong>Some programming experience and a little familiarity with the C programming language.</strong> If you've never programmed in C before, don't let the fact that the inPulse is programmed in C scare you off: C programming can be pretty straightforward, and you'll find that many of the concepts from your preferred programming language will apply. If you're familiar with a programming langauge with a similar syntax -- such as C#, Java, JavaScript, Perl or PHP -- you'll find many of the C constructs familiar. If you'd like to learn some C programming, there are many online resources, such as Zed Shaw's <a href="http://c.learncodethehardway.org/book/"><em>Learn C the Hard Way</em></a>.</p>
+          <p><img src="images/the_c_programming_language.jpg" style="float: right; margin: 0 0 10px 20px;" /><strong>Some programming experience and a little familiarity with the C programming language.</strong> Don't let the fact that the inPulse is programmed in C scare you off: C programming can be pretty straightforward, and you'll find that many of the concepts from your preferred programming language will apply. If you use a programming language that's similar to C, such as C#, Java, JavaScript, Perl or PHP, you'll be at home with much of the C syntax. If you're new to C, there are many free online resources to help you get started, such as Zed Shaw's <a href="http://c.learncodethehardway.org/book/"><em>Learn C the Hard Way</em></a>.</p>
+          <p>(In case you're wondering which flavor of C is used for inPulse programming, it's <a href="http://gcc.gnu.org/c99status.html">gcc's implementation of C99</a>.)</p>
           <p><strong>That's it!</strong> You won't even need an inPulse smartwatch. In this tutorial, you'll run all the apps in the simulator.</p>
           
           <h2>Setting Up the Development Environment</h2>
@@ -232,13 +233,7 @@ Button Up
 // commented than your typical code.
 
 
-// Includes
-// ========
-
-// A standard C header that defines a number of integer types.
-// We'll often need this for the uint32_t, which defines a 32-bit
-// unsigned integer type (useful for counting from 0 to 4.2 billion).
-td#include &lt;stdint.h&gt;
+#include &lt;stdint.h&gt;
 
 // Headers we'll need to program inPulse apps.
 // - pulse_os.h gives us access to the inPulse API functions,
@@ -256,8 +251,9 @@ td#include &lt;stdint.h&gt;
 // such as the watch booting up, the user pressing and releasing
 // the button and so on.
 
-// main_app_init is called once: after the watch has booted up and its
-// OS has been loaded. Use this to initialize your app.
+// main_app_init is called once: after the watch has booted up, its
+// OS has been loaded and when the app is starting up. 
+// Use this to initialize your app.
 void main_app_init()
 {
 
@@ -315,19 +311,24 @@ No resources read from ../resources/inpulse_resources.bin
           <p>It runs, but since it's just a skeleton without any functioning code within, it's not doing anything you can see. Stop the app (either by closing the simulator window or typing <strong>control-C</strong> in the terminal).</p>
           
           <h3>Displaying "Hello World" on the Screen</h3>
-          <p>Just as with command-line desktop apps written in C, the <code>printf</code> function for inPulse sends text to "standard output", which in our case is the watch display. To display the message <strong>Hello, world!</strong>, the following line of code needs to be executed:</p>
-<pre><code>printf("Hello, world!");</code></pre>
+          <p>Just as with command-line desktop apps written in C, the <code>printf</code> function for inPulse sends text to <strong>stdout</strong>, or "standard output". In this particular case, anything sent to <strong>stdout</strong> is displayed in two places:</p>
+          <ul>
+            <li>The simulator display</li>
+            <li>The console</li>
+          </ul>
+          <p>To show the message <strong>Hello, world!</strong> on the simulator display, the following line of code needs to be executed:</p>
+<pre><code>printf("Hello, world!\n");</code></pre>
           <p>That's the easy part. The question is now "Where do we put that line of code?" In a desktop C program, you'd put it in the <code>main</code> function, but our inPulse app skeleton (and inPulse apps in general) doesn't have one.</p>
           <p>The functions in our skeleton where we <em>could</em> place our <code>printf</code> statement are:</p>
           <ul>
-            <li><code>main_app_init</code>: Called only once, when the watch boots up and the OS has been loaded.</li>
+            <li><code>main_app_init</code>: Called only once, when the watch boots up, the OS has been loaded and the app is starting up.</li>
             <li><code>main_app_handle_button_down</code>: Called whenever the user presses <em>down</em> on the watch button.</li>
             <li><code>main_app_handle_button_up</code>: Called whenever the user, after having pressed down on the watch button, releases it.</li>
             <li><code>main_app_loop</code>: Called regularly as the watch continues to operate.</li>
             <li><code>main_app_handle_doz</code>: Called at the time right before the watch is about to go into power-conserving sleep mode.</li>
             <li><code>main_app_handle_hardware_update</code>: Called whenever certain hardware events, such as Bluetooth connection/disconnection or changes in battery charging status take place. </li>
           </ul>
-          <p>Let's try putting it in <code>main_app_init</code> to see what happens. Your code skeleton should look like this now:
+          <p><code>main_app_init</code> is called once, when the app starts up, so it sounds like a good candidate to place that line of code. Your code skeleton should look like this now:
 <pre><code>//
 // Hello, World!
 // =============
@@ -340,12 +341,6 @@ No resources read from ../resources/inpulse_resources.bin
 // commented than your typical code.
 
 
-// Includes
-// ========
-
-// A standard C header that defines a number of integer types.
-// We'll often need this for the uint32_t, which defines a 32-bit
-// unsigned integer type (useful for counting from 0 to 4.2 billion).
 td#include &lt;stdint.h&gt;
 
 // Headers we'll need to program inPulse apps.
@@ -364,8 +359,9 @@ td#include &lt;stdint.h&gt;
 // such as the watch booting up, the user pressing and releasing
 // the button and so on.
 
-// main_app_init is called once: after the watch has booted up and its
-// OS has been loaded. Use this to initialize your app.
+// main_app_init is called once: after the watch has booted up, its
+// OS has been loaded and when the app is starting up. 
+// Use this to initialize your app.
 void main_app_init()
 {
     printf("Hello, world!");
@@ -412,16 +408,722 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
 
 }</code></pre>
           <p>(Yes, that's a lot of code to show for a one-line change, but I thought it might be reassuring to see the whole thing, at least for your first attempt at inPulse code.)</p>
-          <p>Switch to <strong>Terminal</strong>, compile the app with <code>make</code> and then run it. Your terminal window should look like this:</p>
+          <p>Switch to <strong>Terminal</strong>, compile the app with <strong>make</strong> and then run it. Your terminal window should look like this:</p>
 <pre><code>pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">make</span>
 gcc -o build/pulse_app  -Iinclude -std=gnu99 -g -Wall lib/obj/main.o -Llib -D PULSE_SIMULATOR -lapp_common -lpulse_os -lpulse_protocol -lpulse_widgets -lgtk-x11-2.0 src/pulse_app.c
 src/pulse_app.c: In function ‘main_app_init’:
 src/pulse_app.c:41: warning: implicit declaration of function ‘pulse_printf’
 pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">./build/pulse_app</span>
 No resources read from ../resources/inpulse_resources.bin
+Hello, world!
 </code></pre>
+          <p>Note that the text <code>Hello, world!</code> appears in the terminal. Any output created by <code>printf</code> will appear on both the simulator display and in the terminal.</p>
           <p>The simulator should be running and look like this:</p>
           <p><img src="images/simulator_04.jpg"></p>
+          
+          <h3>Responding to Button Presses</h3>
+          <p>Let's make a couple of changes to the current app:</p>
+          <ul>
+            <li>When the user presses down on the button, let's have the watch display the text <strong>Button goes down...</strong></li>
+            <li>When the user releases the button, the watch should display the text <strong>...button goes up!</strong></li>
+          </ul>
+          <p>To do this, we'll add a couple of <code>printf</code> statements: one to <code>main_app_handle_button_down</code> and one to <code>main_app_handle_button_up</code>. Here's how the code should look:</p>
+<pre><code>//
+// Hello, World!
+// =============
+//
+// A simple tutorial app that demonstrates displaying the time
+// and other text on the inPulse smartwatch screen,
+// as well as responding to button events.
+//
+// Since this is a tutorial app, it's a little more heavily
+// commented than your typical code.
+
+
+#include &lt;stdint.h&gt;
+
+// Headers we'll need to program inPulse apps.
+// - pulse_os.h gives us access to the inPulse API functions,
+//   from telling the time to drawing on the screen to controlling
+//   vibration and so on.
+// - pulse_types.h provides data types that we use when using
+//   the inPulse API.
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
+
+
+// inPulse Event Handlers
+// ======================
+// These routines are called in response to inPulse watch events,
+// such as the watch booting up, the user pressing and releasing
+// the button and so on.
+
+// main_app_init is called once: after the watch has booted up, its
+// OS has been loaded and when the app is starting up. 
+// Use this to initialize your app.
+void main_app_init()
+{
+    printf("Hello, world!\n");
+}
+
+// main_app_handle_button_down is called every time the user presses down
+// on the watch button.
+void main_app_handle_button_down()
+{
+    printf("Button goes down...\n");
+}
+
+// main_app_handle_button_up is called every time the user releases the
+// watch button after having pressed it.
+void main_app_handle_button_up()
+{
+    printf("...button goes up!\n");
+}
+
+// main_app_loop is a function that gets called regularly and frequently.
+// Use this for operations that your app will perform on a regular basis.
+// No blocking calls are allowed in this function; any call that blocks
+// for over 5 seconds will cause the inPulse watchdog timer to start and
+// reset the watch.
+void main_app_loop()
+{
+
+}
+
+// main_app_handle_doz is called whenever the processor is about to go into
+// sleep mode to conserve power. Use this to do any "housekeeping" before the
+// watch goes to sleep.
+// The sleep functionality is scheduled with pulse_update_power_down_timer.
+void main_app_handle_doz()
+{
+
+}
+
+// main_app_handle_hardware_update is called whenever certain hardware events
+// take place, such as Bluetooth connection/disconnetion and changes in the
+// "battery charging" status.
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}</code></pre>
+          <p>Switch to <strong>Terminal</strong>, compile the app with <strong>make</strong> and then run it. Your terminal window should look like this:</p>
+<pre><code>pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">make</span>
+gcc -o build/pulse_app  -Iinclude -std=gnu99 -g -Wall lib/obj/main.o -Llib -D PULSE_SIMULATOR -lapp_common -lpulse_os -lpulse_protocol -lpulse_widgets -lgtk-x11-2.0 src/pulse_app.c
+src/pulse_app.c: In function ‘main_app_init’:
+src/pulse_app.c:42: warning: implicit declaration of function ‘pulse_printf’
+pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">./build/pulse_app</span>
+No resources read from ../resources/inpulse_resources.bin
+Hello, world!
+</code></pre>
+          <p>The simulator will run and initially look like this:</p>
+          <p><img src="images/simulator_04.jpg"></p>
+          <p>If you press and release <strong>Button</strong>, it should look like this:</p>
+          <p><img src="images/simulator_05.jpg"></p>
+          <p>If you press and release <strong>Button</strong> more times, the output text will reach past the bottom of the display. When that happens, the text doesn't scroll; instead, the display is cleared, and any remaining text is put at the top:</p>
+          <p><img src="images/simulator_06.jpg"></p>
+          
+          <h3>Telling the Time and Clearing the Display</h3>
+          <p>The inPulse is a smart<em>watch</em>, which implies that its users will use it to tell the time. It uses its own type (defined in <strong>&lt;pulse_types.h&gt;</strong>) -- a <code>struct</code> called <code>pulse_time_tm</code> -- to represent time and date data. Here are its members:</p>
+          <table width="80%" border="4" cellspacing="1" cellpadding="3">
+            <tr>
+              <th width="25%">Member</th>
+              <th width="25%">Type</th>
+              <th width="50%">Description</th>
+            </tr>
+            <tr>
+              <td><code>tm_sec</code></td>
+              <td><code>int32_t</code></td>
+              <td>Seconds [0 - 60]</td>
+            </tr>
+            <tr>
+              <td><code>tm_min</code></td>
+              <td><code>int32_t</code></td>
+              <td>Minutes [0 - 59]</td>
+            </tr>
+            <tr>
+              <td><code>tm_hour</code></td>
+              <td><code>int32_t</code></td>
+              <td>Hour [0 - 23]</td>
+            </tr>
+            <tr>
+              <td><code>tm_mday</code></td>
+              <td><code>int32_t</code></td>
+              <td>Day of the month [1 - 31]</td>
+            </tr>
+            <tr>
+              <td><code>tm_mon</code></td>
+              <td><code>int32_t</code></td>
+              <td>Month [0 - 11, where 0 is January]</td>
+            </tr>
+            <tr>
+              <td><code>tm_year</code></td>
+              <td><code>int32_t</code></td>
+              <td>
+                <p>Year.</p>
+                </p>Note that this is different from the way the year is expressed in the <code>tm</code> structure of the <a href="http://www.cplusplus.com/reference/clibrary/ctime/">standard <strong>&lt;time.h&gt;</strong> or <strong>&lt;ctime&gt;</strong> library</a>, where this value is expressed as years since 1900.</p>
+              </td>
+            </tr>
+            <tr>
+              <td><code>tm_wday</code></td>
+              <td><code>int32_t</code></td>
+              <td>Day of the week [0 - 6, where 0 is Sunday]</td>
+            </tr>
+            <tr>
+              <td><code>tm_yday</code></td>
+              <td><code>int32_t</code></td>
+              <td>Day of the year [0 - 365, where 0 is January 1]</td>
+            </tr>
+            <tr>
+              <td><code>tm_isdat</code></td>
+              <td><code>int32_t</code></td>
+              <td><strong><em>(Unused)</em></strong> Daylight saving time status</td>
+            </tr>
+          </table>
+          <br />
+          <p>To get the current time and date, pass the address of a variable of type <code>pulse_time_tm</code> to the API function <code>pulse_get_time_date</code>. When the function returns, you can extract the time and date information from the <code>pulse_time_tm</code> variable. Here's an example:</p>
+<pre><code>struct pulse_time_tm current_time;
+pulse_get_time_date(&amp;current_time);
+printf("The time is\n%d:%0.2d:%0.2d\n", 
+       current_time.tm_hour,
+       current_time.tm_min,
+       current_time.tm_sec);</code></pre>
+          <p>Clearing the display is pretty simple: a call to the API function <code>pulse_blank_canvas</code> does just that.</p>
+          <p>We can take the current "Hello, world!" code and with very little work, change it into an app that does the following:</p>
+          <ul>
+            <li>Display <strong>Hello, world!</strong> when it starts up</li>
+            <li>Clear the display when the button is pushed down</li>
+            <li>Display the current time when the button is released</li>
+          </ul>
+          <p>Here's what the code looks like:</p>
+<pre><code>//
+// Hello, World!
+// =============
+//
+// A simple tutorial app that demonstrates displaying the time
+// and other text on the inPulse smartwatch screen,
+// as well as responding to button events.
+//
+// Since this is a tutorial app, it's a little more heavily
+// commented than your typical code.
+
+
+#include <stdint.h>
+
+// Headers we'll need to program inPulse apps.
+// - pulse_os.h gives us access to the inPulse API functions,
+//   from telling the time to drawing on the screen to controlling
+//   vibration and so on.
+// - pulse_types.h provides data types that we use when using
+//   the inPulse API.
+#include <pulse_os.h>
+#include <pulse_types.h>
+
+
+struct pulse_time_tm current_time;
+
+
+// inPulse Event Handlers
+// ======================
+// These routines are called in response to inPulse watch events,
+// such as the watch booting up, the user pressing and releasing
+// the button and so on.
+
+// main_app_init is called once: after the watch has booted up, its
+// OS has been loaded and when the app is starting up. 
+// Use this to initialize your app.
+void main_app_init()
+{
+    printf("Hello, world!\n");
+}
+
+// main_app_handle_button_down is called every time the user presses down
+// on the watch button.
+void main_app_handle_button_down()
+{
+    pulse_blank_canvas();
+}
+
+// main_app_handle_button_up is called every time the user releases the
+// watch button after having pressed it.
+void main_app_handle_button_up()
+{
+    pulse_get_time_date(&current_time);
+    printf("The time is\n%d:%0.2d:%0.2d\n", 
+           current_time.tm_hour,
+           current_time.tm_min,
+           current_time.tm_sec);
+}
+
+// main_app_loop is a function that gets called regularly and frequently.
+// Use this for operations that your app will perform on a regular basis.
+// No blocking calls are allowed in this function; any call that blocks
+// for over 5 seconds will cause the inPulse watchdog timer to start and
+// reset the watch.
+void main_app_loop()
+{
+
+}
+
+// main_app_handle_doz is called whenever the processor is about to go into
+// sleep mode to conserve power. Use this to do any "housekeeping" before the
+// watch goes to sleep.
+// The sleep functionality is scheduled with pulse_update_power_down_timer.
+void main_app_handle_doz()
+{
+
+}
+
+// main_app_handle_hardware_update is called whenever certain hardware events
+// take place, such as Bluetooth connection/disconnetion and changes in the
+// "battery charging" status.
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}</code></pre>
+          <p>Switch to <strong>Terminal</strong>, compile the app with <strong>make</strong> and then run it. Your terminal window should look like this:</p>
+<pre><code>pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">make</span>
+gcc -o build/pulse_app  -Iinclude -std=gnu99 -g -Wall lib/obj/main.o -Llib -D PULSE_SIMULATOR -lapp_common -lpulse_os -lpulse_protocol -lpulse_widgets -lgtk-x11-2.0 src/pulse_app.c
+src/pulse_app.c: In function ‘main_app_init’:
+src/pulse_app.c:45: warning: implicit declaration of function ‘pulse_printf’
+pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">./build/pulse_app</span>
+No resources read from ../resources/inpulse_resources.bin
+Hello, world!
+</code></pre>
+          <p>Here's what the simulator looks like when the app starts:</p>
+          <p><img src="images/simulator_04.jpg" /></p>
+          <p>Here's what it looks like while the user presses or holds down <strong>Button</strong>:</p>
+          <p><img src="images/simulator_03.jpg" /></p>
+          <p>And here's what it looks like when the user releases <strong>Button</strong>:</p>
+          <p><img src="images/simulator_07.jpg" /></p>
+          
+          <h2>Let's Make That Magic 8-Ball App</h2>
+          
+          <h3>A Leaner Skeleton</h3>
+          <p>Let's start with some leaner skeleton code -- it's the same as the skeleton code from above, but without all the comments:</p>
+<pre><code>//
+// InPulse Magic 8-Ball
+// ====================
+//
+
+#include &lt;stdint.h&gt;
+
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
+
+
+// inPulse Event Handlers
+// ======================
+
+void main_app_init()
+{
+
+}
+
+void main_app_handle_button_down()
+{
+
+}
+
+void main_app_handle_button_up()
+{
+
+}
+
+void main_app_loop()
+{
+
+}
+
+void main_app_handle_doz()
+{
+
+}
+
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}
+</code></pre>
+          
+          <h3>The <code>main_app_loop</code> Handler</h3>
+          <p>The <code>main_app_loop</code> handler is called regularly and often. If you're familiar with event-driven programming, think of it as being similar to a method called every time you go through the event loop. If you're familiar with game programming, think of it as being like a method called every time you go through the game loop.</p>
+          <p>Here's a little code that shows <code>main_app_loop</code> in action:</p>
+<pre><code>//
+// InPulse Magic 8-Ball
+// ====================
+//
+
+#include &lt;stdint.h&gt;
+
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
+
+
+struct pulse_time_tm current_time;
+
+
+// inPulse Event Handlers
+// ======================
+
+void main_app_init()
+{
+
+}
+
+void main_app_handle_button_down()
+{
+
+}
+
+void main_app_handle_button_up()
+{
+
+}
+
+void main_app_loop()
+{
+    pulse_get_time_date(&amp;current_time);
+    printf("The time is\n%d:%0.2d:%0.2d\n", 
+           current_time.tm_hour,
+           current_time.tm_min,
+           current_time.tm_sec);
+}
+
+void main_app_handle_doz()
+{
+
+}
+
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}
+</code></pre>
+          <p>When you run the app, this is what the simulator looks like:</p>
+          <p><img src="images/simulator_08.jpg" /></p>
+          <p>Here's what the output to the console looks like on my computer (an early 2011-era MacBook Pro):</p>
+<pre><code>The time is
+3:54:13
+The time is
+3:54:13
+The time is
+3:54:13
+The time is
+3:54:13
+The time is
+3:54:13
+The time is
+3:54:14
+The time is
+3:54:14
+The time is
+3:54:14
+The time is
+3:54:14
+The time is
+3:54:14
+The time is
+3:54:15
+The time is
+3:54:15
+The time is
+3:54:15
+The time is
+3:54:15
+The time is
+3:54:15
+The time is
+3:54:16
+The time is
+3:54:16
+The time is
+3:54:16
+The time is
+3:54:16
+The time is
+3:54:16
+</code></pre>
+          <p>On my system, <code>main_app_loop</code> seems to get called about 5 times a second. I don't know anything about how the simulator was programmed, so it's possible that the rate at which <code>mail_app_loop</code> gets called may vary with the speed of your system.</p> 
+          <p>At the very least, you can count on it getting called a handful of times each second. This means you can use it for:</p>
+          <ul>
+            <li>"Listener"-type operations, where the code constantly checks to see if some condition has been met</li>
+            <li>"Clockwork"-type operations, where the code needs to perform some kind of regular update, such as an animation</li>
+          </ul>
+          <p>In the next example, we'll look at a "listener"-type use of <code>main_app_loop</code>.</p>
+
+          <h3>The Main Timer (or: "How Long Have I Been Up?")</h3>
+          <p>The main timer keeps track of the number of milliseconds since the watch (or simulator) has booted up. It continues to do so until the watch goes into sleep mode. When the watch wakes up, it resets to zero and starts counting the milliseconds since it woke up.</p>
+          <p>You can get the main timer's count of milliseconds with the API function <code>pulse_get_millis</code>, which returns a value of type <code>uint32_t</code>.</p>
+          <p>Here's an app that makes use of <code>pulse_get_millis</code>. Here's what it does:</p>
+          <ul>
+            <li>Display <strong>Starting app!</strong> on startup, along with the main timer's value at that time.</li>
+            <li>Every 5 seconds from then on, it clears the display, announces that 5 seconds have passed and shows both the main timer's value at that time as well as the interval (in milliseconds) between this announcement and the previous one.</li>
+          </ul>
+<pre><code>//
+// InPulse Magic 8-Ball
+// ====================
+//
+
+#include &lt;stdint.h&gt;
+
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
+
+#define INTERVAL_LENGTH_MS
+#include <pulse_os.h>
+#include <pulse_types.h> 5000
+uint32_t start_interval_ms;
+uint32_t now_ms;
+
+// inPulse Event Handlers
+// ======================
+
+void main_app_init()
+{
+    start_interval_ms = pulse_get_millis();
+    printf("Starting app!\n");
+    printf("Timer: %d\n", start_interval_ms);
+}
+
+void main_app_handle_button_down()
+{
+
+}
+
+void main_app_handle_button_up()
+{
+
+}
+
+void main_app_loop()
+{
+    now_ms = pulse_get_millis();
+    if (now_ms - start_interval_ms > INTERVAL_LENGTH_MS
+#include <pulse_os.h>
+#include <pulse_types.h>) {
+        pulse_blank_canvas();
+        printf("5 seconds have\npassed!\n");
+        printf("Timer: %d\n", now_ms);
+        printf("Actual interval:%d\n", now_ms - start_interval_ms);
+        start_interval_ms = pulse_get_millis();
+    }
+}
+
+void main_app_handle_doz()
+{
+
+}
+
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}
+</code></pre>
+          <p>Here's the app's initial output:</p>
+          <p><img src="images/simulator_09.jpg" /></p>
+          <p>Here it is, about five seconds later:</p>
+          <p><img src="images/simulator_10.jpg" /></p>
+          <p>Here it is again, a few five-second intervals later:
+          <p><img src="images/simulator_11.jpg" /></p>
+          <p>Here's a capture of the app's console output:
+<pre><code>Starting app!
+Timer: 0
+5 seconds have
+passed!
+Timer: 5197
+Actual interval:5197
+5 seconds have
+passed!
+Timer: 10397
+Actual interval:5195
+5 seconds have
+passed!
+Timer: 15597
+Actual interval:5194
+5 seconds have
+passed!
+Timer: 20802
+Actual interval:5200
+5 seconds have
+passed!
+Timer: 25998
+Actual interval:5192
+5 seconds have
+passed!
+Timer: 31193
+Actual interval:5190
+5 seconds have
+passed!
+Timer: 36388
+Actual interval:5189
+5 seconds have
+passed!
+Timer: 41587
+Actual interval:5194
+</code></pre>
+          <p>As you can see, on my computer, the accuracy of the intervals is about off by a little under 200 milliseconds -- one-fifth of a second. This shouldn't be a surprise, as we determined in the previous exercise that on my computer, the <code>main_app_loop</code> handler gets called 5 times a second.</p>
+          <p>For many apps, being off by a fifth of a second isn't a problem. But let's suppose we want this app to be more accurate. We can do this by reducing the value of <code>INTERVAL_LENGTH_MS</code>. Looking at the console output above and doing a little math, we find that the average actual interval is 5193 milliseconds, or 193 milliseconds longer than our desired interval length. If we subtract 193 from <code>INTERVAL_LENGTH_MS</code>, changing its value to 4807, the app becomes considerably more accurate. Here's the console output for this case:</p>
+<pre><code>Starting app!
+Timer: 0
+5 seconds have
+passed!
+Timer: 4994
+Actual interval:4994
+5 seconds have
+passed!
+Timer: 9992
+Actual interval:4993
+5 seconds have
+passed!
+Timer: 14986
+Actual interval:4988
+5 seconds have
+passed!
+Timer: 19986
+Actual interval:4996
+5 seconds have
+passed!
+Timer: 24989
+Actual interval:4999
+5 seconds have
+passed!
+Timer: 29988
+Actual interval:4994
+5 seconds have
+passed!
+Timer: 34986
+Actual interval:4994
+5 seconds have
+passed!
+Timer: 39984
+Actual interval:4994
+</code></pre>
+          <p>With this single adjustment, the average interval is within 6 milliseconds of our target interval of 5 seconds. That's pretty good; 6 milliseconds is approximately the time it takes sound to travel 6 feet.</p>
+          
+          <h3>At Last, The Magic 8-Ball</h3>
+          <p>We now have enough inPulse programming know-how to code a "Magic 8-Ball" app. It should do the following:</p>
+          <ul>
+            <li>It should normally display the current time, showing the hour, minutes and seconds.</li>
+            <li>When the user presses the button down, the display should read <strong>Think of a yes-or-no question.</strong></li>
+            <li>When the user releases the button, the display should show a "Magic 8-Ball" answer for 6 seconds, then return to its normal display of the current time.
+          </ul>
+          <p>Here's the code for this app:</p>
+<pre><code>//
+// InPulse Magic 8-Ball
+// ====================
+//
+
+#include &lt;stdint.h&gt;
+#include &lt;stdlib.h&gt;
+
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
+
+
+#define  NUM_MAGIC_8BALL_QUOTES 15
+typedef  char* string;
+string   magic_8ball_quotes[NUM_MAGIC_8BALL_QUOTES];
+
+struct pulse_time_tm current_time;
+
+bool is_displaying_time = false;
+#define UPDATE_INTERVAL_LENGTH_MS 900
+#define QUOTE_INTERVAL_LENGTH_MS 6000
+uint32_t start_interval_ms;
+uint32_t current_interval_length_ms;
+uint32_t now_ms;
+
+
+void initialize_magic_8ball_quotes()
+{
+    magic_8ball_quotes[0]  = "I'd bet money on it";
+    magic_8ball_quotes[1]  = "HELLZ YEAH!";
+    magic_8ball_quotes[2]  = "Yes. Absolutely.";
+    magic_8ball_quotes[3]  = "Signs point to yes.";
+    magic_8ball_quotes[4]  = "Without a doubt.";
+    magic_8ball_quotes[5]  = "Ask again later.";
+    magic_8ball_quotes[6]  = "I'm not sure; try again.";
+    magic_8ball_quotes[7]  = "Mmmmmmmmmaybe.";
+    magic_8ball_quotes[8]  = "Think and ask again.";
+    magic_8ball_quotes[9]  = "Can't predict now.";
+    magic_8ball_quotes[10] = "Ummm...no.";
+    magic_8ball_quotes[11] = "HELLZ NO!";
+    magic_8ball_quotes[12] = "Absolutely not!";
+    magic_8ball_quotes[13] = "I seriously doubt it.";
+    magic_8ball_quotes[14] = "No. No. No. NO!";
+}
+
+string random_magic_8ball_quote()
+{
+    return magic_8ball_quotes[rand() % NUM_MAGIC_8BALL_QUOTES];
+}
+
+void update_time_display()
+{
+    pulse_blank_canvas();
+    pulse_get_time_date(&amp;current_time);
+    printf("The time is\n%d:%0.2d:%0.2d\n", 
+           current_time.tm_hour,
+           current_time.tm_min,
+           current_time.tm_sec);
+    is_displaying_time = true;
+    current_interval_length_ms = UPDATE_INTERVAL_LENGTH_MS;
+    start_interval_ms = pulse_get_millis();
+}
+
+void display_prequote_message()
+{
+    pulse_blank_canvas();
+    printf("Think of a yes-\nor-no question.\n");
+}
+
+void display_magic_8ball_quote()
+{
+    pulse_blank_canvas();
+    printf("%s\n", random_magic_8ball_quote());
+    is_displaying_time = false;
+    current_interval_length_ms = QUOTE_INTERVAL_LENGTH_MS;
+    start_interval_ms = pulse_get_millis();
+}
+
+
+// inPulse Event Handlers
+// ======================
+
+void main_app_init()
+{
+    initialize_magic_8ball_quotes();
+    update_time_display();
+}
+
+void main_app_handle_button_down()
+{
+    display_prequote_message();
+}
+
+void main_app_handle_button_up()
+{
+    display_magic_8ball_quote();
+}
+
+void main_app_loop()
+{
+    now_ms = pulse_get_millis();
+    if (now_ms - start_interval_ms > current_interval_length_ms) {
+        update_time_display();
+    }
+}
+
+void main_app_handle_doz()
+{
+
+}
+
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}</code></pre>
+          
         </section>
 
         <footer>

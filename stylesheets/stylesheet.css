@@ -222,15 +222,16 @@ em {
 
 table {
   width: 100%;
-  border: 1px solid #ebebeb;
+  border: 1px solid #c0c0c0;
 }
 
 th {
+  border: 1px solid #c0c0c0;
   font-weight: 500;
 }
 
 td {
-  border: 1px solid #ebebeb;
+  border: 1px solid #c0c0c0;
   text-align: center; 
   font-weight: 300;
 }
