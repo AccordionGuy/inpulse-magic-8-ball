@@ -1,1 +1,5 @@
-# Master README file
+# Code for the inPulse Magic 8-Ball Tutorial
+
+**[inPulse Magic 8-Ball](http://accordionguy.github.com/inpulse-magic-8-ball/)** is a tutorial for programmers who are new to programming apps for the [inPulse smartwatch](http://getinpulse.com/). This tutorial walks the reader through the process of installing the virtual machine development environment and confirming that it works. It then presents a series of tutorial exercises, starting with a "Hello, World" app and concluding with a ["Magic 8-Ball"](http://en.wikipedia.org/wiki/Magic_8-Ball) app. No inPulse smartwatch is necessary; all apps are run on the inPulse simulator in the virtual machine.
+
+[The tutorial is meant to be read online at http://accordionguy.github.com/inpulse-magic-8-ball/](http://accordionguy.github.com/inpulse-magic-8-ball/). Its files are stored in the **inpulse-magic-8-ball** repo in the **gh-pages** branch. The files stored in this branch, the **master** branch, are all the code used in the tutorial.
