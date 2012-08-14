@@ -1167,36 +1167,48 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
           <p>In answer mode, the app displays a random "Magic 8-ball" answer for 5 seconds (<code>display_answer</code>), after which it returns to time mode. The time interval when we check to see if it's time to switch back to time mode is set to 5000 milliseconds, which is 5 seconds. In <code>main_app_loop</code>, we check to see if we've been waiting longer than that interval. If that's the case, it means that 5 seconds have passed and it's time to change to time mode (<code>set_time_mode</code>) and then display the time (<code>update_time_display</code>).</p>
           
           <h2>Another Way to Build the App</h2>
+          <img src="images/timer.jpg" style="float:right; margin:0 0 10px 20px;" />
+
+          <h3>Using Timers</h3>
+          <p>There's another way to implement this app. If you look through the <strong>pulse_os.h</strong> header file, you'll find the prototypes for a couple of API functions whose names contain the word <strong>timer</strong>:</p>
           
-          <h3>The Registered Timer and <code>pulse_register_timer</code></h3>
-          <p>There's another way to implement this app, and that's with the use of the registered timer. The inPulse API gives you a way to set this timer to call a <a href="http://en.wikipedia.org/wiki/Callback_(computer_programming)">callback function</a> after a specified number of milliseconds has passed. The function is <code>pulse_register_timer</code>, and it's defined in <strong>&lt;pulse_os.h&gt;</strong>. Here's its signature:</p>
+          <ul>
+            <li><strong><code>pulse_register_timer</code>:</strong> This function sets up a timer that calls a specified function after a defined amount of time has passed.</li>
+            <li><strong><code>pulse_cancel_timer</code>:</strong> This function cancels any timer that has been set up using <code>pulse_register_timer</code>.</li>
+          </ul>
+        
+          <p><code>pulse_register_timer</code> lets you set up a timer to call a <a href="http://en.wikipedia.org/wiki/Callback_(computer_programming)">callback function</a> with an argument after a specified number of milliseconds has passed. Here's its signature:</p>
           
-<pre><code>int32_t pulse_register_timer(uint32_t timeout_ms, PulseCallback callback, void *data);
+<pre><code>int32_t pulse_register_timer(uint32_t timeout_ms, 
+                             PulseCallback callback,
+                             void *data);
 </code></pre>
 
-<table width="80%" border="4" cellspacing="1" cellpadding="3">
-  <tr>
-    <th width="25%">Parameter</th>
-    <th width="25%">Type</th>
-    <th width="50%">Description</th>
-  </tr>
-  <tr>
-    <td><code>timeout_ms</code></td>
-    <td><code>uint32_t</code></td>
-    <td>The time, in milliseconds, that the registered timer wait until it goes off and calls the <code>callback</code> function.</td>
-  </tr>
-  <tr>
-    <td><code>callback</code></td>
-    <td><code>PulseCallback</code><br />-- a <code>typedef</code> in <strong>&lt;pulse_types.h&gt;</strong> for a proper C callback interface, i.e.:<br /><code>(* callback)(void *callback_data)</code>.</td>
-    <td>The address of the function to be called when the timer goes off.</td>
-  </tr>
-  <tr>
-    <td><code>data</code></td>
-    <td><code>void*</code></td>
-    <td>The data to be passed as a parameter to the <code>callback</code> function.</td>
-  </tr>
-</table>
-<br />
+            <p>Here are its parameters, explained:</p>
+
+            <table width="80%" border="4" cellspacing="1" cellpadding="3">
+              <tr>
+                <th width="25%">Parameter</th>
+                <th width="25%">Type</th>
+                <th width="50%">Description</th>
+              </tr>
+              <tr>
+                <td><code>timeout_ms</code></td>
+                <td><code>uint32_t</code></td>
+                <td>The time, in milliseconds, that the registered timer wait until it goes off and calls the <code>callback</code> function.</td>
+              </tr>
+              <tr>
+                <td><code>callback</code></td>
+                <td><code>PulseCallback</code><br />-- a <code>typedef</code> in <strong>&lt;pulse_types.h&gt;</strong> for a proper C callback interface, i.e.:<br /><code>(* callback)(void *callback_data)</code>.</td>
+                <td>The address of the function to be called when the timer goes off.</td>
+              </tr>
+              <tr>
+                <td><code>data</code></td>
+                <td><code>void*</code></td>
+                <td>The data to be passed as a parameter to the <code>callback</code> function.</td>
+              </tr>
+            </table>
+            <br />
 
             <p>Let's try a little experiment with <code>pulse_register_timer</code>. We'll put together an app that does the following:</p>
             
@@ -1268,14 +1280,14 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
 
           <p>Before we run the app, let's take a quick look at the call to <code>pulse_register_timer</code>:</p>
           
-<pre><code>pulse_register_timer(5000, &display_message, "Hello there!");</code></pre>
+<pre><code>pulse_register_timer(5000, &amp;display_message, "Hello there!");</code></pre>
 
-          <p>This call causes the timer to:</p>
+          <p>Here's what the call does:</p>
           
           <ul>
-            <li>Be set to 5000 milliseconds -- 5 seconds -- after which it "goes" off and calls</li>
-            <li><code>display_message</code>, the callback function, to which it passes</li>
-            <li>the parameter <code>Hello there!</code>.</li>
+            <li>It sets the timer interval for 5000 milliseconds -- 5 seconds.</li>
+            <li>When the timer interval is reached, the timer calls the callback function, <code>display_message</code>.</li>
+            <li>When calling the callback function, the timer passes it a parameter: <code>Hello there!</code>.</li>
           </ul>
           
           <p>For now, we're ignoring <code>pulse_register_timer</code>'s return value; we'll get back to it after we run the app.</p>
@@ -1298,18 +1310,200 @@ Main timer:
 </code></pre>
 
           <p>Here's what the simulator looks like when the app starts:</p>
-
           <p><img src="images/simulator_14.jpg"></p>
-          
           <p>And here's what it looks like about 5 seconds later:</p>
-          
           <p><img src="images/simulator_15.jpg"></p>
+          <p>The value below <strong>Main timer:</strong> is from <code>pulse_get_millis</code>, the main timer's count of milliseconds since the simulator started and the app started running. Note that the interval measured is a little more than 5 seconds -- on average, you'll that that there's a 200 millisecondthe offset is around 200 milliseconds, which is the same as the offset with the timing method we used in the Magic 8-Ball app above.</p>
           
-          <p>The value below <strong>Main timer:</strong> is from <code>pulse_get_millis</code>, the main timer's count of milliseconds since the simulator started and the app started running. Note that not quite 5 seconds, but a little off; the offset is around 200 milliseconds, which is the same as the offset with the timing method we used in the Magic 8-Ball app above.</p>
+          <h3>Multiple Timers</h3>
+          <p><code>pulse_register_timer</code> can be used to register multiple timers. Here's an app that uses three timers, which are set to go off at 3, 5 and 7 seconds.</p>
+          <p>Here's the code:</p>
           
-          <h3>Cancelling the Registered Timer with <code>pulse_cancel_timer</code></h3>
+          <p><strong><em>multiple_timer_demo.c</em></strong></p>
           
-          <h3>And Now, Magic 8-Ball, Registered Timer-Style!</h3>
+<pre><code>//
+// Mulitple Timer Demo
+// ===================
+//
+// An app that demonstrates the inPulse API's
+// pulse_register_timer function to create
+// multiple timers. 
+
+#include &lt;stdint.h&gt;
+
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
+
+
+typedef char* string;
+
+
+void display_message(string message)
+{
+    uint32_t interval = pulse_get_millis();
+    pulse_blank_canvas();
+    printf("%s\n", message);
+    printf("Main timer:\n%d\n", interval);
+}
+
+// inPulse Event Handlers
+// ======================
+
+void main_app_init()
+{
+    printf("Starting the\ntimer.");
+    pulse_register_timer(3000, &display_message, "3 seconds.");
+    pulse_register_timer(5000, &display_message, "5 seconds.");
+    pulse_register_timer(7000, &display_message, "7 seconds.");
+}
+
+void main_app_handle_button_down()
+{
+
+}
+
+void main_app_handle_button_up()
+{
+
+}
+
+void main_app_loop()
+{
+
+}
+
+void main_app_handle_doz()
+{
+
+}
+
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}
+</code></pre>
+          
+          <p>Once again, we're ignoring <code>pulse_register_timer</code>'s return values.</p>
+
+          <p>Switch to <strong>Terminal</strong>, compile the app with <strong>make</strong> and then run it. Your terminal window should look like this:</p>
+          
+<pre><code>pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">make</span>
+gcc -o build/pulse_app  -Iinclude -std=gnu99 -g -Wall lib/obj/main.o -Llib -D PULSE_SIMULATOR -lapp_common -lpulse_os -lpulse_protocol -lpulse_widgets -lgtk-x11-2.0 src/pulse_app.c
+src/pulse_app.c: In function ‘display_message’:
+src/pulse_app.c:21: warning: implicit declaration of function ‘pulse_printf’
+src/pulse_app.c: In function ‘main_app_init’:
+src/pulse_app.c:31: warning: passing argument 2 of ‘pulse_register_timer’ from incompatible pointer type
+include/pulse_os.h:93: note: expected ‘PulseCallback’ but argument is of type ‘void (*)(char *)’
+src/pulse_app.c:32: warning: passing argument 2 of ‘pulse_register_timer’ from incompatible pointer type
+include/pulse_os.h:93: note: expected ‘PulseCallback’ but argument is of type ‘void (*)(char *)’
+src/pulse_app.c:33: warning: passing argument 2 of ‘pulse_register_timer’ from incompatible pointer type
+include/pulse_os.h:93: note: expected ‘PulseCallback’ but argument is of type ‘void (*)(char *)’
+pulsesim@ubuntu-desktop:~/pulse_simulator$ <span class="userinput">./build/pulse_app</span>
+No resources read from ../resources/inpulse_resources.bin
+Starting the
+timer.3 seconds.
+Main timer:
+3198
+5 seconds.
+Main timer:
+5197
+7 seconds.
+Main timer:
+7193
+**************************
+</code></pre>
+          
+          <p>Here's what the simulator looks like when the app starts:</p>          
+          <p><img src="images/simulator_14.jpg"></p>
+          <p>Here's what the simulator looks like about 3 seconds later:</p>
+          <p><img src="images/simulator_16.jpg"></p>
+          <p>Here's what the simulator looks like about 5 seconds later:</p>
+          <p><img src="images/simulator_17.jpg"></p>
+          <p>Here's what the simulator looks like about 7 seconds later:</p>
+          <p><img src="images/simulator_18.jpg"></p>
+          
+          
+          <h3>Cancelling Timers</h3>
+          <p><code>pulse_register_time</code> returns a value of type <code>int32_t</code>, which is a unique ID for the timer. This ID can be fed into <code>pulse_cancel_timer</code> to cancel that specific timer.</p>
+          <p>Here's the code for an app that does the following:</p>
+          <ul>
+            <li>Registers a timer that displays a message after 3 seconds have passed, saving its ID.</li>
+            <li>Registers another time that displays a message after 5 seconds have passed.</li>
+            <li>Cancels the first timer, using the ID that was saved.</li>
+          </ul>
+          
+<pre><code>//
+// Timer Cancellation Demo
+// =======================
+//
+// An app that demonstrates the inPulse API's
+// pulse_register_timer and pulse_cancel_timer
+// functions to create and cancel timers.
+
+#include &lt;stdint.h&gt;
+
+#include &lt;pulse_os.h&gt;
+#include &lt;pulse_types.h&gt;
+
+
+typedef char* string;
+
+
+void display_message(string message)
+{
+    uint32_t interval = pulse_get_millis();
+    pulse_blank_canvas();
+    printf("%s\n", message);
+    printf("Main timer:\n%d\n", interval);
+}
+
+// inPulse Event Handlers
+// ======================
+
+void main_app_init()
+{
+    printf("Starting the\ntimer.");
+    int32_t timer_id = pulse_register_timer(3000, &display_message, "3 seconds.");
+    pulse_register_timer(5000, &display_message, "5 seconds.");
+    pulse_cancel_timer(&timer_id);
+}
+
+void main_app_handle_button_down()
+{
+
+}
+
+void main_app_handle_button_up()
+{
+
+}
+
+void main_app_loop()
+{
+
+}
+
+void main_app_handle_doz()
+{
+
+}
+
+void main_app_handle_hardware_update(enum PulseHardwareEvent event)
+{
+
+}
+</code></pre>
+          
+          <p>Here's what the simulator looks like when the app starts:</p>          
+          <p><img src="images/simulator_14.jpg"></p>
+          <p>Here's what the simulator looks like about 3 seconds later. Note that the "3 seconds." message never appears, because the timer that would trigger it has been cancelled.</p>
+          <p><img src="images/simulator_14.jpg"></p>
+          <p>Here's what the simulator looks like about 5 seconds later:</p>
+          <p><img src="images/simulator_17.jpg"></p>
+          
+          <h3>And Now, Magic 8-Ball, With Timers!</h3>
+          
+          <p>Here's the code:</p>
           
 <pre><code>//
 // InPulse Magic 8-Ball, Timer-Style!
@@ -1455,8 +1649,6 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
 
 }
 </code></pre>
-          
-        </section>
 
         <footer>
           Inpulse-magic-8-ball is maintained by <a href="https://github.com/AccordionGuy">AccordionGuy</a><br>
