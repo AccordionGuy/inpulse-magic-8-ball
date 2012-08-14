@@ -1432,6 +1432,8 @@ Main timer:
             <li>Cancels the first timer, using the ID that was saved.</li>
           </ul>
           
+          <p><a href="https://github.com/AccordionGuy/inpulse-magic-8-ball/blob/master/cancel_timer_demo.c"><strong><em>cancel_timer_demo.c</em></strong></a></p>
+          
 <pre><code>//
 // Timer Cancellation Demo
 // =======================
@@ -1504,6 +1506,8 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
           <h3>And Now, Magic 8-Ball, With Timers!</h3>
           
           <p>Here's the code:</p>
+          
+          <p><a href="https://github.com/AccordionGuy/inpulse-magic-8-ball/blob/master/inpulse_magic_8_ball_timer.c"><strong><em>inpulse_magic_8_ball_timer.c</em></strong></a></p>
           
 <pre><code>//
 // InPulse Magic 8-Ball, Timer-Style!
@@ -1649,6 +1653,12 @@ void main_app_handle_hardware_update(enum PulseHardwareEvent event)
 
 }
 </code></pre>
+
+        <p>At any given moment when the app is running, there is just one active timer, whose ID is stored in the variable <code>timer_id</code>. The timer does different things depending on the mode:</p>
+        <ul>
+          <li><strong>Time mode:</strong> The timer is set to 900 milliseconds, after which the display is updated with the current time with <code>update_time_display</code>, which also sets the mode to time mode.</li>
+          <li><strong>Answer mode:</strong> The time is set to 5000 milliseconds, during which the display shows the Magic 8-Ball answer generated when the user pressed the button. When 5000 milliseconds has elapsed, <code>update_time_display</code> is called, which clears the answer from the display, shows the current time and sets the mode back to time mode.</li>
+        </ul>
 
         <footer>
           Inpulse-magic-8-ball is maintained by <a href="https://github.com/AccordionGuy">AccordionGuy</a><br>
